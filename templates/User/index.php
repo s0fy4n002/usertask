@@ -12,6 +12,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
+                <?= $this->Flash->render() ?>
                 <table class="table table-nowrap mb-0">
                     <thead>
                         <tr>
@@ -19,6 +20,8 @@
                             <th>Nama</th>
                             <th>Email</th>
                             <th>Phone</th>
+                            <th>status</th>
+                            
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -30,8 +33,10 @@
                                 <td><?= $item->name ?></td>
                                 <td><?= $item->email ?></td>
                                 <td><?= $item->phone ?></td>
+                                <td><?= $item->status == 1 ?'aktif':'non aktif' ?></td>
+                                
                                 <td>
-                                    <button type="button" onclick="assignTask(<?= $item->id ?>)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    <button type="button" onclick="assignTask(<?= $item->id ?>, <?= $item->status ?>)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                         Assign Task
                                     </button>
                                     <a href="<?= $this->Url->build(['_name' => 'user.view', 'id' => $item->id]); ?>" class="btn btn-info">View</a>
@@ -62,7 +67,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form name="myform" method="POST">
+            <form name="myform" method="POST" >
                 <input type="hidden" name="_csrfToken" value="<?= $this->request->getAttribute('csrfToken') ?>">
                 <div class="modal-body">
                     <div class="form-group">
@@ -82,10 +87,21 @@
 </div>
 <?php $this->start('addon-script'); ?>
 <script>
-    function assignTask(id) {
+    function assignTask(id, status) {
         const form = document.querySelector("form[name='myform']")
         form.action = "<?= $this->Url->build('/user/add-task', ['fullBase' => true]) ?>" + '/' + id
-        console.log(form)
+        
+        if(status != 1){
+            alert('status anda tidak akatif')
+            form.childNodes[3].childNodes[3].childNodes[1].disabled = true
+            form.childNodes[3].childNodes[1].childNodes[1].disabled=true
+            return
+        }else{
+            form.childNodes[3].childNodes[3].childNodes[1].disabled = false
+            form.childNodes[3].childNodes[1].childNodes[1].disabled = false
+        }
+        
+        
     }
 </script>
 <?php $this->end(); ?>

@@ -45,14 +45,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($user->task as $task){ ?>
+                          
+                                <?php foreach($user->tasks as $task){ ?>
                                     <tr>
                                         <td><?= $task->id ?></td>
                                         <td><?= $task->name ?></td>
                                         <td><?= $task->description ?></td>
-                                        <td><?= $task->status == 1 ? 'Active':'Deactive' ?></td>
+                                        <td><?= $task->status == 1 ? 'Active':'Non Aktif' ?></td>
                                      
-                                        <td><?= $task->created ?></td>
+                                        <td><?= $task->expired ?></td>
                                     </tr>
                                 <?php } ?>
 

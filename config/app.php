@@ -50,7 +50,7 @@ return [
         'namespace' => 'App',
         'encoding' => env('APP_ENCODING', 'UTF-8'),
         'defaultLocale' => env('APP_DEFAULT_LOCALE', 'id_ID'),
-        'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'Asia/Bangkok'),
+        'defaultTimezone' => env('APP_DEFAULT_TIMEZONE', 'Asia/Jakarta'),
         'base' => false,
         'dir' => 'src',
         'webroot' => 'webroot',

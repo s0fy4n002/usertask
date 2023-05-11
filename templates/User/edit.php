@@ -15,7 +15,10 @@
                      echo $this->Form->control('email', ['class'=>'form-control']);
                      echo $this->Form->control('phone', ['class'=>'form-control']);
                      echo $this->Form->control('address', ['class'=>'form-control']);
-                     echo $this->Form->control('status', ['class'=>'form-control']);
+                     echo $this->Form->radio('status',  [
+                        ['value' => '1', 'text' => 'aktif', 'label' => ['style' => 'margin-right:10px']],
+                        ['value' => '0', 'text' => 'non aktif'],
+                    ]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit'), ['class' => 'btn btn-info mt-2']) ?>

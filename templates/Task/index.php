@@ -12,6 +12,8 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
+                <?= $this->Flash->render() ?>
+                
                 <table class="table table-nowrap mb-0">
                     <thead>
                         <tr>
@@ -19,6 +21,8 @@
                             <th>User</th>
                             <th>Name</th>
                             <th>Description</th>
+                            <th>status</th>
+                            <th>expired</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -30,8 +34,13 @@
                                 <td><a href="<?= $this->Url->build('/user/view', ['fullBase' => true])."/".$item->user?->id ?>"><?= $item->user?->name ?></a></td>
                                 <td><?= $item->name ?></td>
                                 <td><?= $item->description ?></td>
+                                <td><?= $item->status == 1 ? 'Aktif' :'non aktif' ?></td>
+                                
+                                <td><?= strtotime($item->expired->format('Y-m-d')) < strtotime('now') ? $item->expired->format('Y-m-d')."(expired)" :$item->expired->format('Y-m-d')    ?></td>
                                 <td>
-                                    <button type="button" onclick="assign(<?= $item->id ?>)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    <button type="button"
+                                    <?= strtotime($item->expired->format('Y-m-d')) < strtotime('now') ? "disabled" :'' ?>
+                                    onclick="assign(<?= $item->id ?>)" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                         Assign User
                                     </button>
                                     <a href="<?= $this->Url->build('/task/view', ['fullBase' => true])."/".$item->id ?>" class="btn btn-info">View</a>
@@ -84,7 +93,7 @@
 <script>
     function assign(task_id) {
         const form = document.querySelector("form[name='myform']")
-        form.action = "<?= $this->Url->build('/admin/task/add-assign', ['fullBase' => true]) ?>" + '/' + task_id
+        form.action = "<?= $this->Url->build('/task/add-assign', ['fullBase' => true]) ?>" + '/' + task_id
         
         console.log(form)
     }

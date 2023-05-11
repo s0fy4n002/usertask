@@ -36,8 +36,8 @@ class User extends Entity
         'phone' => true,
         'address' => true,
         'status' => true,
+        'tasks' => true,
         'created' => true,
         'deleted' => true,
-        'task' => true,
     ];
 }

@@ -50,16 +50,16 @@ return static function (RouteBuilder $routes) {
          * its action called 'display', and we pass a param to select the view file
          * to use (in this case, templates/Pages/home.php)...
          */
-        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-        $builder->connect('/admin', ['controller' => 'Pages', 'action' => 'dashboard']);
-        $builder->connect('/admin/user/view/{id}', ['controller' => 'User', 'action' => 'view'],['_name'=>'user.view'])
+        
+        $builder->connect('/', ['controller' => 'Pages', 'action' => 'dashboard']);
+        $builder->connect('/user/view/{id}', ['controller' => 'User', 'action' => 'view'],['_name'=>'user.view'])
                     ->setPatterns(['id' => '\d+'])
                     ->setPass(['id']);
-        $builder->connect('/admin/user/add-task/{id}', ['controller' => 'User', 'action' => 'addTask'],['_name'=>'user.addTask'])
+        $builder->connect('/user/add-task/{id}', ['controller' => 'User', 'action' => 'addTask'],['_name'=>'user.addTask'])
                     ->setMethods(['POST'])
                     ->setPass(['id']);
 
-        $builder->connect('/admin/task/add-assign/{id}', ['controller' => 'Task', 'action' => 'assignUser'],['_name'=>'task.assignUser'])
+        $builder->connect('/task/add-assign/{id}', ['controller' => 'Task', 'action' => 'assignUser'],['_name'=>'task.assignUser'])
                     ->setMethods(['POST'])
                     ->setPass(['id']);
 

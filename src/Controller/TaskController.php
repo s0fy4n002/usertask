@@ -1,20 +1,23 @@
 <?php
 declare(strict_types=1);
-
 namespace App\Controller;
 
-/**
- * Task Controller
- *
- * @property \App\Model\Table\TaskTable $Task
- * @method \App\Model\Entity\Task[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
- */
+use App\Model\Table\TasksTable;
+use App\Services\TaskService;
+use Cake\Error\Debugger;
+
+
+
 class TaskController extends AppController
 {
+    private TasksTable $Task;
+    
     public function initialize(): void
     {
         parent::initialize();
         $this->viewBuilder()->setLayout('admin');
+        $this->Task = new TasksTable();
+
     }
     /**
      * Index method
@@ -23,11 +26,16 @@ class TaskController extends AppController
      */
     public function index()
     {
+
+        
+        $task = $this->getTableLocator()->get('Tasks')->find();
+        // dd($task->first()->expired);
+        
         $this->paginate = [
             'contain' => ['User'],
         ];
-        $task = $this->paginate($this->Task);
-        $users = $this->fetchTable('User')->find('all');
+        $task = $this->paginate($task);
+        $users = $this->fetchTable('User')->find('all')->where('status = 1');
         $this->set(compact('task','users'));
     }
 
@@ -55,17 +63,22 @@ class TaskController extends AppController
      */
     public function add()
     {
+
         $task = $this->Task->newEmptyEntity();
         if ($this->request->is('post')) {
             $task = $this->Task->patchEntity($task, $this->request->getData());
-            if ($this->Task->save($task)) {
+            // Debugger::dump($task);
+            // exit();
+            if($this->Task->save($task)){
                 $this->Flash->success(__('The task has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The task could not be saved. Please, try again.'));
         }
+
         $user = $this->Task->User->find('list', ['limit' => 200])->all();
+    
         $this->set(compact('task', 'user'));
     }
 
@@ -83,6 +96,7 @@ class TaskController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $task = $this->Task->patchEntity($task, $this->request->getData());
+            
             if ($this->Task->save($task)) {
                 $this->Flash->success(__('The task has been saved.'));
 
@@ -116,9 +130,22 @@ class TaskController extends AppController
     
     public function assignUser(string $task_id){
         $user_id = $this->request->getData('user_id');
-        $taskTable = $this->getTableLocator()->get('Task');
+        $userquery = $this->fetchTable('user')->query();
+        $user = $userquery->where(["id" => $this->request->getData('user_id')])->first();
+        if($user->status != 1){
+            $this->Flash->error(__('User tidak aktip'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        $taskTable = $this->getTableLocator()->get('Tasks');
         $query = $taskTable->query();
-        $result = $query->update()->set(['user_id' => $user_id])->where(['id' => $task_id])->execute();
+        $task_aktif = $taskTable->find('all')->where("expired > CURDATE()")->where("id = $task_id");
+        if($task_aktif->first() == null){
+            $this->Flash->error(__('Task sudah expired'));
+            return $this->redirect(['action' => 'index']);
+            exit;
+        }
+        $query->update()->set(['user_id' => $user_id])->where(['id' => $task_id])->execute();
         $this->Flash->success(__('Berhasil assign user'));
         return $this->redirect(['action' => 'index']);
         
