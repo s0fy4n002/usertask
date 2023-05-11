@@ -8,7 +8,7 @@
                     </li>
 
                     <li>
-                        <a href="<?= $this->Url->build('/admin', ['fullBase' => true]) ?>"><i class="la la-users"></i> <span>Dashboard</span></a>
+                        <a href="<?= $this->Url->build('/', ['fullBase' => true]) ?>"><i class="la la-users"></i> <span>Dashboard</span></a>
                     </li>
                     <li class="submenu">
                         <a onclick="javascript:void(0)" href="<?= $this->Url->build('/user', ['fullBase' => true]) ?>"><i class="la la-files-o"></i> <span> User </span> <span class="menu-arrow"></span></a>
